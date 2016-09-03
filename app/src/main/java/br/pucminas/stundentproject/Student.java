@@ -13,7 +13,7 @@ public class Student {
     private String createdAt;
     private String endereco;
 
-    //Constructor
+    //Constructor with the data to be passed to the API
     public Student(String name, Integer age, String picURL, String phone, String address){
         this.nome = name;
         this.idade = age;
