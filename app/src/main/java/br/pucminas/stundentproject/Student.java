@@ -13,6 +13,15 @@ public class Student {
     private String createdAt;
     private String endereco;
 
+    //Constructor
+    public Student(String name, Integer age, String picURL, String phone, String address){
+        this.nome = name;
+        this.idade = age;
+        this.fotoUrl = picURL;
+        this.telefone = phone;
+        this.endereco = address;
+    }
+
     /**
      *
      * @return
