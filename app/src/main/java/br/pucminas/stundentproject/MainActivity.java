@@ -2,6 +2,8 @@ package br.pucminas.stundentproject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l){
                             Student student = (Student) adapter.getItem(position);
+                            showInGoogleMapsApp(student.getEndereco());
                         }
                     });
                 }else{
@@ -137,6 +140,22 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void showInGoogleMapsApp(String address){
+        // Create a Uri from an intent string. Use the result to create an Intent.
+        //geo:0,0?q=my+street+address
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + address);
+
+        // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        // Make the Intent explicit by setting the Google Maps package
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        // Attempt to start an activity that can handle the Intent
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        }
     }
 
 
