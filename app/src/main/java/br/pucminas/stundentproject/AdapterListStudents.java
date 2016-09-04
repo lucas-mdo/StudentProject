@@ -68,7 +68,7 @@ public class AdapterListStudents extends BaseAdapter {
         //Set student's info
         Picasso.with(mainActivity).load(student.getFotoUrl()).into(holder.imgStudent);
         holder.txtName.setText(student.getNome());
-        holder.txtAge.setText(student.getIdade());
+        holder.txtAge.setText(student.getIdade().toString());
         holder.txtAddress.setText(student.getEndereco());
 
         //Set click of delete button
