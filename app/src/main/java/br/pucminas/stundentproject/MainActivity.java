@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Instance of API service
     private APIService service;
+    //Instance of list adapter
     private AdapterListStudents adapter;
 
     @Override
@@ -110,17 +111,20 @@ public class MainActivity extends AppCompatActivity {
         request.enqueue(new Callback<ResultStudents>() {
             @Override
             public void onResponse(Call<ResultStudents> call, Response<ResultStudents> response) {
-                //Checking if communication with API was sucessful (200)
+                //Checking if communication with API was successful (200)
                 if (response.isSuccessful()){
                     //Get the list from body
                     ResultStudents students = response.body();
 
+                    //Instantiate adapter for list of students
                     adapter = new AdapterListStudents(MainActivity.this, students.getResults());
                     listStudents.setAdapter(adapter);
                     listStudents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l){
+                            //Get selected item as Student
                             Student student = (Student) adapter.getItem(position);
+                            //Show address in google maps app
                             showInGoogleMapsApp(student.getEndereco());
                         }
                     });
@@ -142,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Show selected student's address in google maps app
     private void showInGoogleMapsApp(String address){
         // Create a Uri from an intent string. Use the result to create an Intent.
         //geo:0,0?q=my+street+address
