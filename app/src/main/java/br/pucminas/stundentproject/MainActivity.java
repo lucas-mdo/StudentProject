@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_refresh) {
+            callGetStudents();
         }
 
         return super.onOptionsItemSelected(item);
@@ -217,10 +217,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 //Get all fields from form
                 EditText edtName = ButterKnife.findById(view, R.id.edtName);
-                EditText edtAge = ButterKnife.findById(view, R.id.edtName);
+                EditText edtAge = ButterKnife.findById(view, R.id.edtAge);
                 //EditText edtPicture = ButterKnife.findById(view, R.id.edtName);
-                EditText edtPhone = ButterKnife.findById(view, R.id.edtName);
-                EditText edtAddress = ButterKnife.findById(view, R.id.edtName);
+                EditText edtPhone = ButterKnife.findById(view, R.id.edtPhone);
+                EditText edtAddress = ButterKnife.findById(view, R.id.edtAddress);
 
                 //Get their content
                 String name = edtName.getText().toString();
@@ -274,8 +274,8 @@ public class MainActivity extends AppCompatActivity {
 
     //Show messages for every call to the API, showing results and errors alike
     private void showMessage(String msg){
-        Snackbar snackbar = Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_INDEFINITE)
-                .setAction("Try", new View.OnClickListener() {
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, msg, Snackbar.LENGTH_LONG)
+                .setAction("OK", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         callGetStudents();
