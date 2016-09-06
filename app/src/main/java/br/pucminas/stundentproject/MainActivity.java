@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
                     ResponseBody result = response.body();
 
                     //Show sucessful message
-                    showMessage(response.code() + " - Item " + idStudent + " deleted successfully!");
+                    showMessage(response.code() + " - Item deleted successfully!");
 
                     //Refresh list
                     callGetStudents();
@@ -278,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
                 .setAction("OK", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //Refresh list
                         callGetStudents();
                     }
                 });
