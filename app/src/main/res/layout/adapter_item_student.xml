@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:text="Dory"
             android:id="@+id/txtName"
@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:text="10"
             android:id="@+id/txtAge"
             />
@@ -48,26 +48,28 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:text="P. Sherman, 42"
             android:id="@+id/txtAddress"
             />
     </LinearLayout>
     
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1">
+    <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:layout_weight="1">-->
 
         <!-- Remove icon -->
         <ImageView
-            android:layout_width="24dp"
+            android:layout_width="0dp"
             android:layout_height="24dp"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_delete_blue_grey_800_24dp"
             android:id="@+id/imgDelete"
             />
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
 </LinearLayout>
