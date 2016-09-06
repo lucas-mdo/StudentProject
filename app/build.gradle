@@ -34,5 +34,7 @@ dependencies {
     //Adding butterknife library
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.jakewharton:butterknife:8.4.0'
+    //Adding saripaar library
+    compile 'com.mobsandgeeks:android-saripaar:2.0.3'
 
 }
