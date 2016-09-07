@@ -18,6 +18,13 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +35,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Validator.ValidationListener {
 
     //Layout for main activity
     @BindView(R.id.coordinatorLayout)
@@ -40,10 +47,29 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.listStudents)
     ListView listStudents;
 
+    //New student input fields
+    //Name
+    @NotEmpty
+    EditText edtName;
+    //Age
+    @NotEmpty
+    EditText edtAge;
+    //PicURL
+    @NotEmpty
+    EditText edtPicture;
+    //Phone
+    @NotEmpty
+    EditText edtPhone;
+    //Address
+    @NotEmpty
+    EditText edtAddress;
+
     //Instance of API service
     private APIService service;
     //Instance of list adapter
     private AdapterListStudents adapter;
+    //Instance of validator fields
+    private Validator validator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Binding butterknife to this activity
         ButterKnife.bind(this);
+
+        validator = new Validator(this);
+        validator.setValidationListener(this);
 
         //Auto-generated FAB
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -98,6 +127,35 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+
+        //Get their content
+        String name = edtName.getText().toString();
+        String age = edtAge.getText().toString();
+        String picURL = edtPicture.getText().toString();
+        String phone = edtPhone.getText().toString();
+        String address = edtAddress.getText().toString();
+
+        //Instantiate new student and save it
+        callAddStudent(new Student(name, Integer.parseInt(age), picURL, phone, address));
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(this);
+
+            // Display error messages ;)
+            if (view instanceof EditText) {
+                ((EditText) view).setError(message);
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     //Call to API to get the list of students
@@ -163,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     //Call to API to delete a student, passing his Id - delete icon onclick
     public void callDeleteStudent (final String idStudent){
         //Call to delete a student
@@ -202,9 +259,16 @@ public class MainActivity extends AppCompatActivity {
         //Inflate dialog
         final View view = inflater.inflate(R.layout.dialog_add_student, null);
         //Get edit picture field
-        final EditText edtPicture = ButterKnife.findById(view, R.id.edtPicture);
+        edtPicture = ButterKnife.findById(view, R.id.edtPicture);
         //Set to a random picture using robohash
         edtPicture.setText("https://robohash.org/"+ Math.random() +".png");
+
+        //Get all fields from form
+        edtName = ButterKnife.findById(view, R.id.edtName);
+        edtAge = ButterKnife.findById(view, R.id.edtAge);
+        //EditText edtPicture = ButterKnife.findById(view, R.id.edtName);
+        edtPhone = ButterKnife.findById(view, R.id.edtPhone);
+        edtAddress = ButterKnife.findById(view, R.id.edtAddress);
 
         //Create builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -215,22 +279,8 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Get all fields from form
-                EditText edtName = ButterKnife.findById(view, R.id.edtName);
-                EditText edtAge = ButterKnife.findById(view, R.id.edtAge);
-                //EditText edtPicture = ButterKnife.findById(view, R.id.edtName);
-                EditText edtPhone = ButterKnife.findById(view, R.id.edtPhone);
-                EditText edtAddress = ButterKnife.findById(view, R.id.edtAddress);
-
-                //Get their content
-                String name = edtName.getText().toString();
-                String age = edtAge.getText().toString();
-                String picURL = edtPicture.getText().toString();
-                String phone = edtPhone.getText().toString();
-                String address = edtAddress.getText().toString();
-
-                //Instantiate new student and save it
-                callAddStudent(new Student(name, Integer.parseInt(age), picURL, phone, address));
+                //Validate fields
+                validator.validate();
             }
         });
 
