@@ -49,19 +49,19 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
     //New student input fields
     //Name
-    @NotEmpty
+    @NotEmpty(messageResId = R.string.msg_error_not_empty)
     EditText edtName;
     //Age
-    @NotEmpty
+    @NotEmpty(messageResId = R.string.msg_error_not_empty)
     EditText edtAge;
     //PicURL
-    @NotEmpty
+    @NotEmpty(messageResId = R.string.msg_error_not_empty)
     EditText edtPicture;
     //Phone
-    @NotEmpty
+    @NotEmpty(messageResId = R.string.msg_error_not_empty)
     EditText edtPhone;
     //Address
-    @NotEmpty
+    @NotEmpty(messageResId = R.string.msg_error_not_empty)
     EditText edtAddress;
 
     //Instance of API service
@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     private AdapterListStudents adapter;
     //Instance of validator fields
     private Validator validator;
+    //Instance of dialog form (needed to be global for validation dismiss)
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,15 +134,22 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
     @Override
     public void onValidationSucceeded() {
 
-        //Get their content
+        //Get contents from input fields
         String name = edtName.getText().toString();
         String age = edtAge.getText().toString();
         String picURL = edtPicture.getText().toString();
         String phone = edtPhone.getText().toString();
         String address = edtAddress.getText().toString();
 
-        //Instantiate new student and save it
-        callAddStudent(new Student(name, Integer.parseInt(age), picURL, phone, address));
+        try {
+            //Instantiate new student and save it
+            callAddStudent(new Student(name, Integer.parseInt(age), picURL, phone, address));
+            dialog.dismiss();
+        }
+        catch (Exception ex) { //Just a safeguard
+            edtAge.setError("This field must be a number!");
+        }
+
     }
 
     @Override
@@ -149,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
             View view = error.getView();
             String message = error.getCollatedErrorMessage(this);
 
-            // Display error messages ;)
+            // Display error messages
             if (view instanceof EditText) {
                 ((EditText) view).setError(message);
             } else {
@@ -196,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
 
             @Override
             public void onFailure(Call<ResultStudents> call, Throwable t) {
-                //Some error ocurred, show what went wrong
+                //Some error occurred, show what went wrong
                 showMessage("Fail to return the list of students - " + t.getMessage());
                 //Hide the progress bar
                 progressBar.setVisibility(View.GONE);
@@ -274,13 +283,18 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //Set custom view
         builder.setView(view);
+        //Set title
+        builder.setTitle(R.string.dialog_title_new_student);
+        //Set message
+        builder.setMessage(R.string.dialog_msg_required);
 
         //Set positive button behavior (save)
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Validate fields
-                validator.validate();
+                //Do nothing here because we override this button later to change the close behaviour.
+                //However, we still need this because on older versions of Android unless we
+                //pass a handler the button doesn't get instantiated
             }
         });
 
@@ -288,8 +302,22 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         builder.setNegativeButton("Cancel", null);
 
         //Create and show dialog
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
+        //Prevent dismiss from outside touch
+        dialog.setCanceledOnTouchOutside(false);
+
         dialog.show();
+
+        //Custom click (needed for avoiding dismissing the dialog when errors occurred)
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //Validate input fields
+                validator.validate();
+            }
+        });
     }
 
     private void callAddStudent(final Student student){
