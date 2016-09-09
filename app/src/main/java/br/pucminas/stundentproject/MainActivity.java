@@ -283,6 +283,8 @@ public class MainActivity extends AppCompatActivity implements Validator.Validat
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //Set custom view
         builder.setView(view);
+        //Set icon
+        builder.setIcon(R.drawable.ic_assignment_ind_blue_grey_900_24dp);
         //Set title
         builder.setTitle(R.string.dialog_title_new_student);
         //Set message
