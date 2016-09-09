@@ -10,16 +10,6 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-        <!-- Title -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:text="New Student"
-            />
-
         <!-- Label Name -->
         <TextView
             android:layout_width="wrap_content"
